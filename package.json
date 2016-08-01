@@ -1,0 +1,19 @@
+{
+  "name": "shiner",
+  "version": "1.0.0",
+  "description": "A simple jquery plugin to change the visibility of slides (simple slideshow)",
+  "main": "shiner.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmergentIdeas/node-shiner.git"
+  },
+  "author": "Dan Kolz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EmergentIdeas/node-shiner/issues"
+  },
+  "homepage": "https://github.com/EmergentIdeas/node-shiner#readme"
+}
