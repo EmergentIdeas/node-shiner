@@ -1,0 +1,56 @@
+.moving-slides-container {
+	position: relative;
+	overflow: hidden;
+	
+	img.placeholder {
+		visibility: hidden;
+		max-width: 100%;
+	}
+	
+	img.moving-slide {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		.transition(transform 1s);
+		.transform(translateX(100%));
+		
+		&.right {
+			.transform(translateX(100%));
+			z-index: 3;
+		}
+		
+		&.left {
+			.transform(translateX(-100%));
+			z-index: 2;
+		}
+		
+		&.visible {
+			.transform(translateX(0));
+			z-index: 4;
+		}
+	}
+}
+
+.crossfade-container {
+	position: relative;
+	
+	.slide {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		opacity: 0;
+		.transition(opacity 2s);
+	}
+
+	.slide.invisible {
+		opacity: 0;
+	}
+
+	.slide.visible {
+		opacity: 1;
+	}
+}
+

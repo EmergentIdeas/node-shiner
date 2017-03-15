@@ -39,9 +39,10 @@ var defaults = {
 		delay: 5000 					/* The delay between the changes in slides */
 };
 
-var Shiner = function(selector) {
+var Shiner = function(selector, context) {
 	this.selector = selector
 	this.delay = defaults.delay
+	this.context = context
 }
 
 /**
@@ -49,8 +50,7 @@ var Shiner = function(selector) {
  * making it not hidden
  */
 Shiner.prototype.makeVisible = function(slide) {
-	slide.removeClass('invisible')
-	slide.addClass('visible')
+	slide = $(slide)
 	if(!cssTransitionSupport) {
 		var oldvalue = $.data(slide, 'old-display');
 		if(!oldvalue) {
@@ -58,16 +58,27 @@ Shiner.prototype.makeVisible = function(slide) {
 		}
 		slide.css('display', oldvalue);
 	}
+	else {
+		slide.removeClass('right left')
+		slide.addClass('visible')
+		slide.removeClass('invisible')
+	}
 	
+}
+
+Shiner.prototype.makeNext = function(slide) {
+	slide = $(slide)
+	slide.addClass('right')
+	slide.removeClass('visible')
+	slide.addClass('invisible')
 }
 
 /**
  * make the slide invisible either by making it transparent if that's supported in the browser or
  * making it hidden
  */
-Shiner.prototype.makeInvisible = function(slide) {
-	slide.addClass('invisible')
-	slide.removeClass('visible')
+Shiner.prototype.makeInvisible = function(slide, goRight) {
+	slide = $(slide)
 	if(!cssTransitionSupport) {
 		var oldvalue = slide.css('display');
 		if(oldvalue != 'none') {
@@ -75,18 +86,10 @@ Shiner.prototype.makeInvisible = function(slide) {
 		}
 		slide.css('display', 'none');
 	}
-}
-
-/**
- * Returns true if the slide is opaque (if that's supported by the browser) or not hidden if 
- * opacity is not supported.
- */
-Shiner.prototype.isVisible = function(slide) {
-	if(cssTransitionSupport) {
-		return slide.css('opacity') == 1;
-	}
 	else {
-		return slide.css('display') != 'none';
+		slide.removeClass('visible')
+		slide.addClass(goRight ? 'right' : 'left')
+		slide.addClass('invisible')
 	}
 }
 
@@ -94,56 +97,24 @@ Shiner.prototype.isVisible = function(slide) {
  * Makes the currently visible slide invisible and makes the next slide in the sequence visible
  */
 Shiner.prototype.goToNext = function() {
-	var last = false;
-	var slides = $(this.selector);
-	var self = this
-	slides.each(function() {
-		var slide = $(this);
-		if(self.isVisible(slide)) {
-			self.makeInvisible(slide);
-			last = true;
-		}
-		else {
-			if(last == true) {
-				last = false;
-				self.makeVisible(slide);
-			}
-		}
-		
-	});
-	
-	if(last) {
-		// meaning the one we made transparent was the last one
-		this.makeVisible(slides.first());
-	}
+	this.slides.removeClass('left right')
+	this.makeInvisible(this.slidesArray[0], false)
+	this.makeVisible(this.slidesArray[1])
+	this.makeNext(this.slidesArray[2])
+	var last = this.slidesArray.shift()
+	this.slidesArray.push(last)
 }
 
 /**
  * Makes the currently visible slide invisible and makes the previous slide in the sequence visible
  */
 Shiner.prototype.goToPrevious = function() {
-	var last = true;
-	var previous = null;
-	var slides = $(this.selector);
-	var self = this
-	slides.each(function() {
-		var slide = $(this);
-		if(self.isVisible(slide)) {
-			self.makeInvisible(slide);
-			if(previous) {
-				this.makeVisible(previous);
-				last = false;
-			}
-		}
-		
-		previous = slide;
-		
-	});
-	
-	if(last) {
-		// meaning the one we made transparent was the last one
-		this.makeVisible(slides.last());
-	}
+	this.slides.removeClass('left right')
+	var last = this.slidesArray.pop()
+	this.slidesArray.unshift(last)
+	this.makeInvisible(this.slidesArray[this.slidesArray.length - 1], false)
+	this.makeVisible(this.slidesArray[0])
+	this.makeInvisible(this.slidesArray[1], true)
 }
 
 /**
@@ -172,10 +143,22 @@ Shiner.prototype.shineOff = function() {
  * sets up the slides by making them all invisible and then making the first one visible.
  */
 Shiner.prototype.initShine = function(options) {
-	var slides = $(this.selector);
+	var slides
+	if(this.context) {
+		slides = this.slides = $(this.context).find(this.selector);
+	}
+	else {
+		slides = this.slides = $(this.selector);
+	}
 	var self = this
-	slides.each(function() { self.makeInvisible($(this)); } );
-	this.makeVisible(slides.first());
+	slides.addClass('invisible')
+	this.slidesArray = slides.toArray()
+	$(this.slidesArray[0]).removeClass('invisible')
+	$(this.slidesArray[1]).removeClass('invisible')
+	this.makeVisible(this.slidesArray[0])
+	this.makeNext(this.slidesArray[1])
+	this.nextWasLast = true
+
 	
 	setTimeout(function() {
 		self.shineOn();
@@ -183,14 +166,48 @@ Shiner.prototype.initShine = function(options) {
 
 }
 
-var shiners = {}
+Shiner.prototype.go = function() {
+	this.shineOn();
+}
+
+Shiner.prototype.next = function() {
+	this.shineOff();
+	this.goToNext();
+	this.shineOn();
+}
+
+Shiner.prototype.previous = function() {
+	this.shineOff();
+	this.goToPrevious();
+	this.shineOn();
+}
+
+Shiner.prototype.stop = function() {
+	this.shineOff();
+}
+
+
+var idSeed = 1
+var shinerSet = {}
+
+var getMakeId = function(el) {
+	if(!el.id) {
+		el.id = 'slideholder' + idSeed++
+	}
+	return el.id
+}
 
 $.fn.shiner = function(options) {
 	
-	var theselector = this.selector;
+	var theselector = this.selector
+	var shiners = shinerSet[getMakeId(this.context)]
+	if(!shiners) {
+		shiners = {}
+		shinerSet[getMakeId(this.context)] = shiners
+	}
 	var shiner = shiners[theselector]
 	if(shiner == null) {
-		shiner = new Shiner(theselector)
+		shiner = new Shiner(theselector, this.context)
 		shiners[theselector] = shiner
 	}
 	
@@ -199,25 +216,23 @@ $.fn.shiner = function(options) {
 	}
 	else if(typeof options === 'string') {
 		if (options === 'stop') {
-			shiner.shineOff();
+			shiner.stop();
 		}
 		else if (options === 'go') {
-			shiner.shineOn();
+			shiner.go();
 		}
 		else if (options === 'next') {
-			shiner.shineOff();
-			shiner.goToNext();
-			shiner.shineOn();
+			shiner.next();
 		}
 		else if (options === 'previous') {
-			shiner.shineOff();
-			shiner.goToPrevious();
-			shiner.shineOn();
+			shiner.previous();
 		}
 	}
 	else if(typeof options === 'object') {
 		shiner.initShine(options);
 	}
+	
+	return shiner
 }
 
 module.exports = Shiner
