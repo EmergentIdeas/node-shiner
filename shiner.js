@@ -66,6 +66,10 @@ Shiner.prototype.makeVisible = function(slide) {
 	
 }
 
+Shiner.prototype.isVisible = function(slide) {
+	return slide.hasClass('visible');
+}
+
 Shiner.prototype.makeNext = function(slide) {
 	slide = $(slide)
 	slide.addClass('right')
@@ -90,6 +94,10 @@ Shiner.prototype.makeInvisible = function(slide, goRight) {
 		slide.removeClass('visible')
 		slide.addClass(goRight ? 'right' : 'left')
 		slide.addClass('invisible')
+	}
+	
+	if(this.onVisible) {
+		this.onVisible(slide, this.slides.index(slide))
 	}
 }
 
@@ -186,6 +194,26 @@ Shiner.prototype.stop = function() {
 	this.shineOff();
 }
 
+Shiner.prototype.showSlide = function(slidePos) {
+	this.shineOff();
+	var slides = this.slides;
+	var pos = 0;
+	var shine = this
+	this.slides.each(function() {
+		var slide = $(this);
+		if(shine.isVisible(slide)) {
+			shine.makeInvisible(slide);
+		}
+		if(pos === slidePos) {
+			shine.makeVisible(slide)
+		}
+		
+		pos++
+	});
+	
+	this.shineOn();
+}
+
 
 var idSeed = 1
 var shinerSet = {}
@@ -197,7 +225,7 @@ var getMakeId = function(el) {
 	return el.id
 }
 
-$.fn.shiner = function(options) {
+$.fn.shiner = function(options, slidePos) {
 	
 	var theselector = this.selector
 	var shiners = shinerSet[getMakeId(this.context)]
@@ -227,6 +255,10 @@ $.fn.shiner = function(options) {
 		else if (options === 'previous') {
 			shiner.previous();
 		}
+		else if (options === 'show') {
+			shiner.showSlide(slidePos)
+		}
+
 	}
 	else if(typeof options === 'object') {
 		shiner.initShine(options);

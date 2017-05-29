@@ -1,6 +1,6 @@
 {
   "name": "shiner",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple jquery plugin to change the visibility of slides (simple slideshow)",
   "main": "shiner.js",
   "scripts": {
