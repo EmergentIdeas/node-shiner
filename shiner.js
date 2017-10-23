@@ -64,6 +64,10 @@ Shiner.prototype.makeVisible = function(slide) {
 		slide.removeClass('invisible')
 	}
 	
+	if(this.onVisible) {
+		this.onVisible(slide, this.slides.index(slide))
+	}
+	
 }
 
 Shiner.prototype.isVisible = function(slide) {
@@ -96,8 +100,8 @@ Shiner.prototype.makeInvisible = function(slide, goRight) {
 		slide.addClass('invisible')
 	}
 	
-	if(this.onVisible) {
-		this.onVisible(slide, this.slides.index(slide))
+	if(this.onInvisible) {
+		this.onInvisible(slide, this.slides.index(slide))
 	}
 }
 
