@@ -1,6 +1,6 @@
 {
   "name": "shiner",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A simple jquery plugin to change the visibility of slides (simple slideshow)",
   "main": "shiner.js",
   "scripts": {
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/EmergentIdeas/node-shiner/issues"
   },
-  "homepage": "https://github.com/EmergentIdeas/node-shiner#readme"
+  "homepage": "https://github.com/EmergentIdeas/node-shiner#readme",
+  "dependencies": {
+    "jquery": "^3.5.1"
+  }
 }
