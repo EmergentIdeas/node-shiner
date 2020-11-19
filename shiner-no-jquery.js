@@ -40,10 +40,11 @@ function setup($) {
 			delay: 5000 					/* The delay between the changes in slides */
 	};
 
-	var Shiner = function(selector, context) {
+	var Shiner = function(selector, context, jList) {
 		this.selector = selector
 		this.delay = defaults.delay
 		this.context = context
+		this.jList = jList
 	}
 
 	/**
@@ -178,7 +179,10 @@ function setup($) {
 		}
 
 		var slides
-		if(this.context) {
+		if(this.jList) {
+			slides = this.slides = this.jList
+		}
+		else if(this.context) {
 			slides = this.slides = $(this.context).find(this.selector);
 		}
 		else {
@@ -252,17 +256,22 @@ function setup($) {
 	}
 
 	$.fn.shiner = function(options, slidePos) {
-		
-		var theselector = this.selector
-		var shiners = shinerSet[getMakeId(this.context)]
-		if(!shiners) {
-			shiners = {}
-			shinerSet[getMakeId(this.context)] = shiners
+		var shiner	
+		if(this.selector) {
+			var theselector = this.selector
+			var shiners = shinerSet[getMakeId(this.context)]
+			if(!shiners) {
+				shiners = {}
+				shinerSet[getMakeId(this.context)] = shiners
+			}
+			var shiner = shiners[theselector]
+			if(shiner == null) {
+				shiner = new Shiner(theselector, this.context)
+				shiners[theselector] = shiner
+			}
 		}
-		var shiner = shiners[theselector]
-		if(shiner == null) {
-			shiner = new Shiner(theselector, this.context)
-			shiners[theselector] = shiner
+		else {
+			shiner = new Shiner(null, null, this)
 		}
 		
 		if(!options) {
