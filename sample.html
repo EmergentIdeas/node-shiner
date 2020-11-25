@@ -1,0 +1,87 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="./shiner.css">
+	<style>
+		.shiner-show.slides .slide-1 {
+			background-image: url('https://scripts.hormel.com/img/cat1.jpg');
+			background-position: center center;
+		}
+
+		@media (max-width: 992px) {
+			.shiner-show.slides .slide-1 {
+				background-image: url('https://scripts.hormel.com/img/cat2.png');
+			}
+		}
+
+
+		@media (max-width: 576px) {
+			.shiner-show.slides .slide-1 {
+				background-image: url('https://scripts.hormel.com/img/cat3.jpg');
+			}
+		}
+
+		.shiner-show.slides .slide-2 {
+			background-image: url('https://www.peanutbutter.com/wp-content/uploads/2019/01/skippy-peanut-butter-and-jelly-minis-solid-750x500.jpg');
+			background-position: center center;
+		}
+
+		.shiner-show.slides .slide-3 {
+			background-image: url('https://www.peanutbutter.com/wp-content/uploads/2019/01/image-product-peanut-butter-bites-group-600x600.png');
+			background-position: center center;
+		}
+
+		.shiner-show.slides .slide-4 {
+			background-image: url('https://scripts.hormel.com/img/cat4.jpg');
+			background-position: center center;
+		}
+
+		@media (max-width: 992px) {
+			.shiner-show.slides .slide-4 {
+				background-image: url('https://www.peanutbutter.com/wp-content/uploads/2020/06/Skippy_Peanutbutter.com_2000X666_SkippyPlaceCarousel_06.2020_v1.jpg');
+			}
+		}
+	</style>
+
+	<script src="https://code.jquery.com/jquery-1.12.4.js"
+		integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+	<script src="./dist/direct-use.js" ></script>
+</head>
+
+<body>
+
+
+	<section class="flexible-db-banner">
+		<div class="slides shiner-show">
+			<div class="slide slide-1 " data-delay="5000">
+				<a class="slide-link" href="https://www.hormel.com"></a>
+				<div class="a-test-element">&nbsp;</div>
+			</div>
+
+			<div class="slide slide-2 " data-delay="5000">
+
+			</div>
+
+			<div class="slide slide-3 " data-delay="5000">
+
+			</div>
+
+			<div class="slide slide-4 " data-delay="5000">
+				<a class="slide-link" href="https://www.peanutbutter.com/#"></a>
+			</div>
+
+			<div class="dots">
+	
+			</div>
+			<div class="advance">
+				&gt;
+			</div>
+			<div class="previous">
+				&lt;
+			</div>
+		</div>
+	</section>
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+.shiner-show {
+	position: relative;
+}
+
+.shiner-show:before {
+	content: '\00a0';
+	padding-top: 16.5%;
+	padding-bottom: 16.5%;
+	display: inline-block;
+	font-size: 0;
+	width: 0;
+	height: 0;
+}
+
+.shiner-show .slide {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.shiner-show .slide:first-of-type {
+	width: 100%;
+	z-index: 2;
+}
+
+.shiner-show.transitions-on .slide {
+	transition:  1s;
+	width: 100%;
+}
+
+
+.shiner-show .slide.visible {
+	opacity: 1;
+	z-index: 4;
+}
+
+.shiner-show .slide.invisible {
+	opacity: 0;
+}
+
+.shiner-show .slide-link {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.shiner-show .dots {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	text-align: center;
+	z-index: 10;
+}
+.shiner-show .dots .dot {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 11px;
+	margin: 10px;
+	border: solid white 2px;
+}
+.shiner-show .dots .dot.current {
+	background-color: white;
+}
+
+.shiner-show .advance, .shiner-show .previous {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 10;
+	color: white;
+	font-size: 50px;
+	cursor: pointer;
+	text-shadow: black 2px 2px;
+}
+.shiner-show .advance {
+	right: 20px;
+}
+.shiner-show .previous {
+	left: 20px;
+}

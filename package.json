@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/EmergentIdeas/node-shiner#readme",
   "dependencies": {
-    "jquery": "^3.5.1"
+    "jquery": "^3.5.1",
+    "swipe-listener": "^1.3.0"
   }
 }
