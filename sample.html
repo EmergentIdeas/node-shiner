@@ -1,6 +1,7 @@
 <html>
 
 <head>
+	<meta charset="UTF-8">
 	<link rel="stylesheet" href="./shiner.css">
 	<style>
 		.shiner-show.slides .slide-1 {
@@ -42,6 +43,14 @@
 			}
 		}
 	</style>
+	<script >
+		window.shinerShowReady = function (shine) {
+			console.log('show initialized')
+		}		
+		window.shinerShowStart = function (shine) {
+			console.log('show started')
+		}		
+	</script>
 
 	<script src="https://code.jquery.com/jquery-1.12.4.js"
 		integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>

@@ -197,10 +197,12 @@ function setup($) {
 		this.makeNext(this.slidesArray[1])
 		this.nextWasLast = true
 
-		
 		setTimeout(function() {
 			self.shineOn();
-		}, 100);
+			if(window.shinerShowStart) {
+				window.shinerShowStart(self)
+			}
+		}, window.shinerStartDelay || 100);
 
 	}
 

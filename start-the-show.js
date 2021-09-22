@@ -12,7 +12,18 @@ function start($, Shiner, SwipeListener) {
 			}
 
 			var shine = $('.shiner-show .slide').shiner(options)
-			window.shine = shine
+			if(window.shine) {
+				if(Array.isArray(window.shine)) {
+					window.shine.push(shine)
+				}
+				else {
+					var s = window.shine
+					window.shine = [s]
+				}
+			}
+			else {
+				window.shine = shine
+			}
 
 
 			$('.shiner-show .advance').on('click', function (evt) {
@@ -32,14 +43,17 @@ function start($, Shiner, SwipeListener) {
 				$theShow.find('.dot').removeClass('current').eq(ind).addClass('current')
 			}
 			var slideCount = $('.shiner-show .slide').length
+			
 			var $dots = $('.shiner-show .dots')
-			if ($dots.length > 0) {
-				for (var i = 0; i < slideCount; i++) {
-					$dots.append('<div class="dot"></div>')
-                }
-                $dots.find('.dot').eq(0).addClass('current')
-            }
+			if($('.shiner-show .dots .dot').length < 1) {
+				if ($dots.length > 0) {
+					for (var i = 0; i < slideCount; i++) {
+						$dots.append('<div class="dot"></div>')
+					}
+				}
+			}
             
+            $dots.find('.dot').eq(0).addClass('current')
             $dots.find('.dot').on('click', function(evt) {
                 var $dot = $(this)
                 var pos = $dot.index()
@@ -66,6 +80,9 @@ function start($, Shiner, SwipeListener) {
 				
 			}
 
+			if(window.shinerShowReady) {
+				window.shinerShowReady(shine)
+			}
 
 		}
 		else {
