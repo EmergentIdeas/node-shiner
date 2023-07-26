@@ -13,7 +13,7 @@ function addShineToWindow(shine) {
 	}
 }
 
-function defaultPlaceOfText(ind, total) {
+function defaultPlaceOfText(ind, total, slide) {
 	return (ind + 1) + ' of ' + total
 }
 
@@ -24,7 +24,7 @@ function defaultDotCreator(slide) {
 }
 
 
-function start($, Shiner, SwipeListener, 
+function create(Shiner, SwipeListener, 
 	{showSelector = '.shiner-show',
 	slideSelector = '.slide',
 	dotsSelector = '.dots',
@@ -47,16 +47,25 @@ function start($, Shiner, SwipeListener,
 		}
 		if(slides.length > 1) {
 			// create the show
-			const shine = new Shiner(slideSelector, $(show))
+			const shine = new Shiner(slideSelector, show)
 			shine.internalSetup({
 				delay: slideDelay
 			})
 			shines.push(shine)
 			addShineToWindow(shine)
+			show.shine = shine
 
 			// listen to advance and previous clicks
-			show.querySelectorAll(advanceSelector).forEach(adv => shine.next())
-			show.querySelectorAll(previousSelector).forEach(adv => shine.previous())
+			show.querySelectorAll(advanceSelector).forEach(button => {
+				button.addEventListener('click', evt => {
+					shine.next()
+				})
+			})
+			show.querySelectorAll(previousSelector).forEach(button => {
+				button.addEventListener('click', evt => {
+					shine.previous()
+				})
+			})
 			
 			// add all the dots
 			// let the option create the dot so that we could create something more
@@ -74,15 +83,16 @@ function start($, Shiner, SwipeListener,
 				let counter = 0
 				allDots.forEach(dot => {
 					const ind = counter++
-					dot.addEventListener('click', shine.showSlide(ind))	
+					dot.addEventListener('click', evt => shine.showSlide(ind))	
 				})
 			}
 			
-			
+			// initialize the place of value	
+			show.querySelectorAll(placeOfSelector).forEach(placeOf => placeOf.innerHTML = placeOfText(0, slides.length))
 
 			// update the dots and place of text box when the slide changes
 			shine.onVisible = function(slide, ind) {
-				show.querySelectorAll(placeOfSelector).forEach(placeOf => placeOf.innerHTML = placeOfText(ind, slides.length))
+				show.querySelectorAll(placeOfSelector).forEach(placeOf => placeOf.innerHTML = placeOfText(ind, slides.length, slide))
 				let dots = show.querySelectorAll(dotSelector)
 				dots.forEach(dot => dot.classList.remove('current'))
 				if(dots[ind]) {
@@ -112,9 +122,11 @@ function start($, Shiner, SwipeListener,
 				window.shinerShowReady(shine)
 			}
 		}
-		show.classList.add('transitions-on')
+		setTimeout(function() {
+			show.classList.add('transitions-on')
+		}, 10)
 	}
 	return shines
 }
 
-module.exports = start
+module.exports = create
