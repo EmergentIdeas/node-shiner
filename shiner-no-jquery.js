@@ -170,10 +170,7 @@ function setup($) {
 		this.timerId = null;
 	}
 
-	/**
-	* sets up the slides by making them all invisible and then making the first one visible.
-	*/
-	Shiner.prototype.initShine = function(options) {
+	Shiner.prototype.internalSetup = function(options) {
 		if(options && options.delay) {
 			this.delay = options.delay
 		}
@@ -188,7 +185,6 @@ function setup($) {
 		else {
 			slides = this.slides = $(this.selector);
 		}
-		var self = this
 		slides.addClass('invisible')
 		this.slidesArray = slides.toArray()
 		$(this.slidesArray[0]).removeClass('invisible')
@@ -196,7 +192,15 @@ function setup($) {
 		this.makeVisible(this.slidesArray[0])
 		this.makeNext(this.slidesArray[1])
 		this.nextWasLast = true
+	}
 
+	/**
+	* sets up the slides by making them all invisible and then making the first one visible.
+	*/
+	Shiner.prototype.initShine = function(options) {
+		this.internalSetup(options)
+
+		var self = this
 		setTimeout(function() {
 			self.shineOn();
 			if(window.shinerShowStart) {
